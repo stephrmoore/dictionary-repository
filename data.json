@@ -7,7 +7,7 @@
         {
           "id": "form-garmin-sleep",
           "name": "Garmin Sleep Summary",
-          "subtitle": "AMS Event Form data dictionary",
+          "subtitle": "Athlete 360 Event Form data dictionary",
           "sourceNote": "Teamworks AMS Form Builder screenshots plus one sample PDF export (Garmin Sleep Summary, single athlete record).",
           "fields": [
             {
@@ -19,10 +19,9 @@
               "definition": "Unique identifier for this sleep summary record. Sample value observed: 45f5f40f-56fd-4ab5-9ac0-bfed02d002df_1788307200, which is a GUID followed by what appears to be a Unix epoch timestamp (calendar date suffix).",
               "units": "N/A (alphanumeric string)",
               "calc": "Not certain how this is generated — most likely produced by the Garmin Connect/Health API and passed through unchanged on sync. Recommend verifying the exact concatenation logic with whoever configured the Garmin-to-AMS integration.",
-              "visibility": "Likely Admin/Backend only — not a field a coach or athlete would need to see or edit. Not confirmed in the screenshots provided.",
+              "internalVetting": "Exact ID-generation logic and system visibility rules are inferred, not confirmed. Verify with the AMS/Garmin integration owner.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "Exact ID-generation logic and system visibility rules are inferred, not confirmed. Verify with the AMS/Garmin integration owner.",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -35,10 +34,9 @@
               "definition": "Indicates how Garmin validated the sleep record — i.e., how confident Garmin's algorithm is that the recorded sleep data is accurate and final (versus a provisional/in-progress estimate).",
               "units": "N/A (categorical code)",
               "calc": "Not applicable — passed through directly from the Garmin API.",
-              "visibility": "Recommend Coach/Admin visibility; not typically meaningful to an athlete.",
+              "internalVetting": "I am not certain of the complete list of possible Validation values. Only ENHANCED_FINAL is confirmed by the sample export. Based on general familiarity with Garmin Connect/Health API conventions (not verified against current Garmin documentation), other possible values may include MANUAL, OFF_WRIST, AUTOMATIC, ENHANCED, and ENHANCED_TENTATIVE — please verify this list against Garmin's current API reference before treating it as authoritative.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "I am not certain of the complete list of possible Validation values. Only ENHANCED_FINAL is confirmed by the sample export. Based on general familiarity with Garmin Connect/Health API conventions (not verified against current Garmin documentation), other possible values may include MANUAL, OFF_WRIST, AUTOMATIC, ENHANCED, and ENHANCED_TENTATIVE — please verify this list against Garmin's current API reference before treating it as authoritative.",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -51,10 +49,9 @@
               "definition": "Total recorded sleep duration for the night, from sleep onset to final wake time (may or may not include awake interruptions — see Calculation/Logic).",
               "units": "Hours:Minutes:Seconds",
               "calc": "Not certain whether this includes or excludes intra-sleep awake periods. Sample record shows Duration = 7:30:00 while Deep + Light + REM + Awake + Unmeasurable sums to approximately the same total, suggesting Duration is likely the sum of all sleep-stage segments. Recommend confirming the exact formula with the data source.",
-              "visibility": "Coach/Athlete — likely a primary reporting metric for both.",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -67,10 +64,9 @@
               "definition": "Portion of the recorded sleep window that the device could not classify into a specific sleep stage (deep/light/REM/awake), typically due to motion artifacts or the device being removed.",
               "units": "Hours:Minutes:Seconds",
               "calc": "Not applicable — passed through from Garmin.",
-              "visibility": "Coach/Admin — useful for assessing data quality/reliability of the night's reading.",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -83,10 +79,9 @@
               "definition": "Total time spent in deep (slow-wave) sleep during the recorded period.",
               "units": "Hours:Minutes:Seconds",
               "calc": "Sum of all individual deep-sleep segment durations listed in the Sleep Levels grid.",
-              "visibility": "Coach & Athlete — commonly used recovery/readiness indicator.",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -99,10 +94,9 @@
               "definition": "Total time spent in light sleep during the recorded period.",
               "units": "Hours:Minutes:Seconds",
               "calc": "Sum of all individual light-sleep segment durations listed in the Sleep Levels grid.",
-              "visibility": "Coach & Athlete",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -115,10 +109,9 @@
               "definition": "Total time spent in REM (rapid eye movement) sleep during the recorded period.",
               "units": "Hours:Minutes:Seconds",
               "calc": "Sum of all individual REM segment durations listed in the Sleep Levels grid.",
-              "visibility": "Coach & Athlete",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -131,10 +124,9 @@
               "definition": "Total time spent awake within the recorded sleep window (i.e., interruptions after sleep onset, not time before falling asleep).",
               "units": "Hours:Minutes:Seconds",
               "calc": "Sum of all individual awake segment durations listed in the Sleep Levels grid.",
-              "visibility": "Coach & Athlete",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -147,10 +139,9 @@
               "definition": "Presumed to be total sleep duration expressed in milliseconds, mirroring the Duration field in a machine-readable numeric unit rather than hh:mm:ss text.",
               "units": "Milliseconds (presumed)",
               "calc": "Presumed: Duration converted to milliseconds. Not confirmed.",
-              "visibility": "Not confirmed — no input control was visible in the builder screenshot, so this may be a hidden/backend/calculated field rather than a user- or coach-facing one.",
+              "internalVetting": "No input box appeared next to this label in the builder screenshot. This may be a calculated/system-only field, a field hidden by conditional logic, or a rendering artifact of the screenshot. Please verify directly in the AMS Form Builder.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "No input box appeared next to this label in the builder screenshot. This may be a calculated/system-only field, a field hidden by conditional logic, or a rendering artifact of the screenshot. Please verify directly in the AMS Form Builder.",
+              "origin": "derived",
               "gridId": null,
               "gridColIndex": null
             },
@@ -163,10 +154,9 @@
               "definition": "Presumed to be total sleep duration expressed as a decimal number of hours (e.g., 7.5), mirroring the Duration field in a reporting-friendly numeric format.",
               "units": "Hours, decimal (presumed)",
               "calc": "Presumed: Duration converted to decimal hours. Not confirmed.",
-              "visibility": "Not confirmed — see note.",
+              "internalVetting": "Same caveat as Sleep ms — no input box was visible in the builder screenshot. Verify directly in AMS.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "Same caveat as Sleep ms — no input box was visible in the builder screenshot. Verify directly in AMS.",
+              "origin": "derived",
               "gridId": null,
               "gridColIndex": null
             },
@@ -179,10 +169,9 @@
               "definition": "Identifies which sleep stage a given time segment belongs to.",
               "units": "N/A (categorical)",
               "calc": "N/A",
-              "visibility": "Coach & Athlete (detailed view)",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": "grid-sleep-levels",
               "gridColIndex": 0
             },
@@ -195,10 +184,9 @@
               "definition": "Start time of the sleep-stage segment.",
               "units": "Time",
               "calc": "N/A",
-              "visibility": "Coach & Athlete (detailed view)",
+              "internalVetting": "The sample PDF shows negative and irregular values for Start/End (e.g., -1:-2:00, 0:-13:00). This looks like a formatting/mapping issue — possibly a millisecond time-offset value being mis-rendered as hh:mm:ss rather than a genuine clock time — but I cannot confirm the root cause from the files provided. Recommend checking the raw Garmin API payload and the AMS field mapping/format mask before relying on this field for reporting.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "The sample PDF shows negative and irregular values for Start/End (e.g., -1:-2:00, 0:-13:00). This looks like a formatting/mapping issue — possibly a millisecond time-offset value being mis-rendered as hh:mm:ss rather than a genuine clock time — but I cannot confirm the root cause from the files provided. Recommend checking the raw Garmin API payload and the AMS field mapping/format mask before relying on this field for reporting.",
+              "origin": "api",
               "gridId": "grid-sleep-levels",
               "gridColIndex": 1
             },
@@ -211,10 +199,9 @@
               "definition": "End time of the sleep-stage segment.",
               "units": "Time",
               "calc": "N/A",
-              "visibility": "Coach & Athlete (detailed view)",
+              "internalVetting": "Same formatting concern as the Start field above.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "Same formatting concern as the Start field above.",
+              "origin": "api",
               "gridId": "grid-sleep-levels",
               "gridColIndex": 2
             },
@@ -227,10 +214,9 @@
               "definition": "Length of the individual sleep-stage segment.",
               "units": "Hours:Minutes:Seconds",
               "calc": "End minus Start (presumed, given the Start/End formatting issue noted above, this may not be a simple subtraction in the underlying data).",
-              "visibility": "Coach & Athlete (detailed view)",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": "grid-sleep-levels",
               "gridColIndex": 3
             },
@@ -243,10 +229,9 @@
               "definition": "Timestamp at which a given blood-oxygen saturation (SpO2) sample was recorded.",
               "units": "Time",
               "calc": "N/A",
-              "visibility": "Coach/Admin — clinical/physiological detail, likely not needed at athlete level.",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": "grid-spo2",
               "gridColIndex": 0
             },
@@ -259,10 +244,9 @@
               "definition": "Blood-oxygen saturation percentage recorded by the device at the corresponding Time of Reading.",
               "units": "Percent (%)",
               "calc": "N/A",
-              "visibility": "Coach/Admin",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": "grid-spo2",
               "gridColIndex": 1
             },
@@ -275,10 +259,9 @@
               "definition": "Purpose unclear. Appears separate from 'Overall Sleep Score' and 'Overall Sleep Score Value' in the Sleep Score section below, despite a very similar name.",
               "units": "Unknown",
               "calc": "Unknown",
-              "visibility": "Unknown",
+              "internalVetting": "This field sits under a section literally named 'Testing,' which suggests it may be a placeholder, QA/test artifact, or a field still being validated by whoever built the form — rather than a field intended for production use. I did not fill in a guessed Definition/Purpose here because I don't have a verified basis for one. Recommend confirming directly with the form's builder/owner whether this field is still in use.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "This field sits under a section literally named 'Testing,' which suggests it may be a placeholder, QA/test artifact, or a field still being validated by whoever built the form — rather than a field intended for production use. I did not fill in a guessed Definition/Purpose here because I don't have a verified basis for one. Recommend confirming directly with the form's builder/owner whether this field is still in use.",
+              "origin": "derived",
               "gridId": null,
               "gridColIndex": null
             },
@@ -291,10 +274,9 @@
               "definition": "Categorical, plain-language quality rating for the night's overall sleep, derived by Garmin's scoring algorithm from the numeric Overall Sleep Score Value.",
               "units": "N/A (categorical)",
               "calc": "Not certain — presumed to be a tiered mapping of Overall Sleep Score Value ranges to a label (e.g., GOOD corresponds to 89 in the sample). Exact thresholds are not confirmed.",
-              "visibility": "Coach & Athlete — likely the primary at-a-glance readiness/recovery indicator.",
+              "internalVetting": "Only the value GOOD is confirmed by the sample data. Other tiers likely exist (e.g., EXCELLENT, FAIR, POOR, based on the same labels seen in the Score Item table below) but this is inferred, not confirmed — verify the complete rating scale with Garmin's documentation or AMS's integration notes.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "Only the value GOOD is confirmed by the sample data. Other tiers likely exist (e.g., EXCELLENT, FAIR, POOR, based on the same labels seen in the Score Item table below) but this is inferred, not confirmed — verify the complete rating scale with Garmin's documentation or AMS's integration notes.",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -307,10 +289,9 @@
               "definition": "Composite numeric sleep-quality score for the night, on what appears to be a 0–100 scale.",
               "units": "Score points (presumed 0–100 scale; range not explicitly confirmed)",
               "calc": "Not certain — presumed to be a weighted composite of the individual Score Item ratings below (totalDuration, stress, awakeCount, remPercentage, restlessness, lightPercentage, deepPercentage), consistent with Garmin's general sleep-scoring approach. Exact weighting formula is not confirmed.",
-              "visibility": "Coach & Athlete",
+              "internalVetting": "",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": false,
-              "flagNote": "",
+              "origin": "api",
               "gridId": null,
               "gridColIndex": null
             },
@@ -323,10 +304,9 @@
               "definition": "Name of the individual sleep sub-metric being scored.",
               "units": "N/A (categorical)",
               "calc": "N/A",
-              "visibility": "Coach/Admin — more granular detail than most athletes need day-to-day.",
+              "internalVetting": "The seven items listed are the ones observed in this single sample export. Treat this as the observed set, not necessarily an exhaustive list of every possible Score Item — additional sub-metrics may exist in other records.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "The seven items listed are the ones observed in this single sample export. Treat this as the observed set, not necessarily an exhaustive list of every possible Score Item — additional sub-metrics may exist in other records.",
+              "origin": "api",
               "gridId": "grid-score-breakdown",
               "gridColIndex": 0
             },
@@ -339,10 +319,9 @@
               "definition": "Qualitative rating for the corresponding Score Item.",
               "units": "N/A (categorical)",
               "calc": "N/A",
-              "visibility": "Coach/Admin",
+              "internalVetting": "EXCELLENT, GOOD, and FAIR are all confirmed in the sample data. A fourth tier (e.g., POOR) is plausible by symmetry but not confirmed — verify the complete rating scale before building validation rules against it.",
               "changelog": "v1.0 — [date] — Initial documentation from Form Builder export.",
-              "flagged": true,
-              "flagNote": "EXCELLENT, GOOD, and FAIR are all confirmed in the sample data. A fourth tier (e.g., POOR) is plausible by symmetry but not confirmed — verify the complete rating scale before building validation rules against it.",
+              "origin": "api",
               "gridId": "grid-score-breakdown",
               "gridColIndex": 1
             }
@@ -364,7 +343,8 @@
                 "1:35:00",
                 "0:24:00"
               ],
-              "sampleNote": ""
+              "sampleNote": "",
+              "origin": "api"
             },
             {
               "id": "grid-spo2",
@@ -378,7 +358,8 @@
                 "6:14 AM",
                 "97"
               ],
-              "sampleNote": "Illustrative only — the sample export's SpO2 grid had no rows to reference."
+              "sampleNote": "Illustrative only — the sample export's SpO2 grid had no rows to reference.",
+              "origin": "api"
             },
             {
               "id": "grid-score-breakdown",
@@ -392,7 +373,8 @@
                 "deepPercentage",
                 "FAIR"
               ],
-              "sampleNote": ""
+              "sampleNote": "",
+              "origin": "api"
             }
           ],
           "sections": [
@@ -401,170 +383,6 @@
             "Sleep SpO2 Samples (repeating grid)",
             "Testing",
             "Sleep Score"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "sensor-mtn7ugng-xgbks",
-      "name": "Whoop",
-      "forms": [
-        {
-          "id": "form-mtn7ugng-hqks8",
-          "name": "Whoop Recovery Summary",
-          "subtitle": "Data dictionary",
-          "sourceNote": "Uploaded from a data-dictionary CSV.",
-          "fields": [
-            {
-              "id": "field-mtn7ugng-hn18f",
-              "section": "New Section",
-              "name": "Recovery Score",
-              "instructions": "Single-line number box",
-              "type": "Numeric (0-100)",
-              "definition": "Overall recovery score for the day",
-              "units": "%",
-              "calc": "N/A",
-              "visibility": "Coach & Athlete",
-              "changelog": "v1.0 — [date] — Initial documentation.",
-              "flagged": false,
-              "flagNote": "",
-              "gridId": null,
-              "gridColIndex": null
-            },
-            {
-              "id": "field-mtn7ugng-kumt5",
-              "section": "HRV Samples",
-              "name": "Time of Reading",
-              "instructions": "Grid column, one row per sample",
-              "type": "Time",
-              "definition": "Timestamp of the HRV sample",
-              "units": "Time",
-              "calc": "N/A",
-              "visibility": "Coach/Admin",
-              "changelog": "v1.0 — [date] — Initial documentation.",
-              "flagged": false,
-              "flagNote": "",
-              "gridId": "grid-mtn7ugng-zegf2",
-              "gridColIndex": 0
-            },
-            {
-              "id": "field-mtn7ugng-kfczx",
-              "section": "HRV Samples",
-              "name": "HRV (ms)",
-              "instructions": "Grid column, numeric value per row",
-              "type": "Numeric",
-              "definition": "Heart rate variability reading in milliseconds",
-              "units": "ms",
-              "calc": "N/A",
-              "visibility": "Coach/Admin",
-              "changelog": "v1.0 — [date] — Initial documentation.",
-              "flagged": false,
-              "flagNote": "",
-              "gridId": "grid-mtn7ugng-zegf2",
-              "gridColIndex": 1
-            }
-          ],
-          "grids": [
-            {
-              "id": "grid-mtn7ugng-zegf2",
-              "label": "HRV Reading",
-              "section": "HRV Samples",
-              "columnIds": [
-                "field-mtn7ugng-kumt5",
-                "field-mtn7ugng-kfczx"
-              ],
-              "sample": [
-                "6:14 AM",
-                "62"
-              ],
-              "sampleNote": ""
-            }
-          ],
-          "sections": [
-            "New Section",
-            "HRV Samples"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "sensor-mtni16ki-p59lu",
-      "name": "Polar",
-      "forms": [
-        {
-          "id": "form-mtni16ki-c1rxb",
-          "name": "Whoop Recovery Summary",
-          "subtitle": "Data dictionary",
-          "sourceNote": "Uploaded from a data-dictionary CSV.",
-          "fields": [
-            {
-              "id": "field-mtni16ki-symxq",
-              "section": "New Section",
-              "name": "Recovery Score",
-              "instructions": "Single-line number box",
-              "type": "Numeric (0-100)",
-              "definition": "Overall recovery score for the day",
-              "units": "%",
-              "calc": "N/A",
-              "visibility": "Coach & Athlete",
-              "changelog": "v1.0 — [date] — Initial documentation.",
-              "flagged": false,
-              "flagNote": "",
-              "gridId": null,
-              "gridColIndex": null
-            },
-            {
-              "id": "field-mtni16ki-43kdz",
-              "section": "HRV Samples",
-              "name": "Time of Reading",
-              "instructions": "Grid column, one row per sample",
-              "type": "Time",
-              "definition": "Timestamp of the HRV sample",
-              "units": "Time",
-              "calc": "N/A",
-              "visibility": "Coach/Admin",
-              "changelog": "v1.0 — [date] — Initial documentation.",
-              "flagged": false,
-              "flagNote": "",
-              "gridId": "grid-mtni16ki-umy07",
-              "gridColIndex": 0
-            },
-            {
-              "id": "field-mtni16ki-6m995",
-              "section": "HRV Samples",
-              "name": "HRV (ms)",
-              "instructions": "Grid column, numeric value per row",
-              "type": "Numeric",
-              "definition": "Heart rate variability reading in milliseconds",
-              "units": "ms",
-              "calc": "N/A",
-              "visibility": "Coach/Admin",
-              "changelog": "v1.0 — [date] — Initial documentation.",
-              "flagged": false,
-              "flagNote": "",
-              "gridId": "grid-mtni16ki-umy07",
-              "gridColIndex": 1
-            }
-          ],
-          "grids": [
-            {
-              "id": "grid-mtni16ki-umy07",
-              "label": "HRV Reading",
-              "section": "HRV Samples",
-              "columnIds": [
-                "field-mtni16ki-43kdz",
-                "field-mtni16ki-6m995"
-              ],
-              "sample": [
-                "6:14 AM",
-                "62"
-              ],
-              "sampleNote": ""
-            }
-          ],
-          "sections": [
-            "New Section",
-            "HRV Samples"
           ]
         }
       ]
