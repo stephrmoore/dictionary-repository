@@ -20,6 +20,8 @@
     --api-blue-bg: #C2DEFF;
     --derived-gold: #96690A;
     --derived-gold-bg: #FBF3E3;
+    --linked-burgundy: #A6192E;
+    --linked-burgundy-bg: #F6E7EA;
     --danger: #D31118;
     --line: #DED7CE;
     --line-soft: #EEE9E2;
@@ -168,7 +170,13 @@
 
   .section-block { margin-top: 30px; }
   .section-block:first-of-type { margin-top: 18px; }
-  .section-heading-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .section-heading-row {
+    list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 2px; margin-bottom: 10px; border-bottom: 1px solid var(--line);
+  }
+  .section-heading-row::-webkit-details-marker { display: none; }
+  .section-heading-row:hover .section-heading { color: var(--teal); }
+  .section-chevron { margin-right: 8px; }
   .section-heading { font-size: 12.5px; font-weight: 600; color: var(--navy); text-transform: uppercase; letter-spacing: 0.06em; }
   .section-remove { font-size: 11.5px; color: var(--danger); background: none; border: none; cursor: pointer; opacity: 0.7; }
   .section-remove:hover { opacity: 1; text-decoration: underline; }
@@ -177,6 +185,7 @@
 
   details.field { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--api-blue); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
   details.field[data-origin="derived"] { border-left-color: var(--derived-gold); }
+  details.field[data-origin="linked"] { border-left-color: var(--linked-burgundy); }
   summary.field-summary { list-style: none; cursor: pointer; padding: 13px 16px; display: flex; align-items: center; gap: 12px; justify-content: space-between; }
   summary.field-summary::-webkit-details-marker { display: none; }
   .summary-left { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
@@ -189,6 +198,7 @@
     color: var(--api-blue); background: var(--api-blue-bg); white-space: nowrap;
   }
   .origin-badge[data-origin="derived"] { color: var(--derived-gold); background: var(--derived-gold-bg); }
+  .origin-badge[data-origin="linked"] { color: var(--linked-burgundy); background: var(--linked-burgundy-bg); }
   button.origin-badge { border: none; cursor: pointer; font-family: 'Public Sans', sans-serif; }
   body.edit-mode button.origin-badge { outline: 1px dashed currentColor; outline-offset: 1px; }
 
@@ -249,7 +259,7 @@
 <script>
 (async function() {
   const SEED_APP = {"sensors": [{"id": "sensor-garmin", "name": "Garmin", "forms": [{"id": "form-garmin-sleep", "name": "Garmin Sleep Summary", "subtitle": "Athlete 360 Event Form data dictionary", "sourceNote": "Teamworks AMS Form Builder screenshots plus one sample PDF export (Garmin Sleep Summary, single athlete record).", "fields": [{"id": "field-1", "section": "New Section", "name": "Summary Id", "instructions": "Single-line text box, no visible mask. Populated automatically when a Garmin sleep record syncs into AMS.", "type": "Text (System-Generated Identifier)", "definition": "Unique identifier for this sleep summary record. Sample value observed: 45f5f40f-56fd-4ab5-9ac0-bfed02d002df_1788307200, which is a GUID followed by what appears to be a Unix epoch timestamp (calendar date suffix).", "units": "N/A (alphanumeric string)", "calc": "Not certain how this is generated \u2014 most likely produced by the Garmin Connect/Health API and passed through unchanged on sync. Recommend verifying the exact concatenation logic with whoever configured the Garmin-to-AMS integration.", "internalVetting": "Exact ID-generation logic and system visibility rules are inferred, not confirmed. Verify with the AMS/Garmin integration owner.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-2", "section": "New Section", "name": "Validation", "instructions": "Single-line text box.", "type": "Text / Enumerated (Status Code)", "definition": "Indicates how Garmin validated the sleep record \u2014 i.e., how confident Garmin's algorithm is that the recorded sleep data is accurate and final (versus a provisional/in-progress estimate).", "units": "N/A (categorical code)", "calc": "Not applicable \u2014 passed through directly from the Garmin API.", "internalVetting": "I am not certain of the complete list of possible Validation values. Only ENHANCED_FINAL is confirmed by the sample export. Based on general familiarity with Garmin Connect/Health API conventions (not verified against current Garmin documentation), other possible values may include MANUAL, OFF_WRIST, AUTOMATIC, ENHANCED, and ENHANCED_TENTATIVE \u2014 please verify this list against Garmin's current API reference before treating it as authoritative.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-3", "section": "New Section", "name": "Duration", "instructions": "Masked time input, format hh:mm:ss (shown in builder as a placeholder hint below the field).", "type": "Time Duration (hh:mm:ss)", "definition": "Total recorded sleep duration for the night, from sleep onset to final wake time (may or may not include awake interruptions \u2014 see Calculation/Logic).", "units": "Hours:Minutes:Seconds", "calc": "Not certain whether this includes or excludes intra-sleep awake periods. Sample record shows Duration = 7:30:00 while Deep + Light + REM + Awake + Unmeasurable sums to approximately the same total, suggesting Duration is likely the sum of all sleep-stage segments. Recommend confirming the exact formula with the data source.", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-4", "section": "New Section", "name": "Unmeasurable Sleep", "instructions": "Masked time input, format hh:mm:ss.", "type": "Time Duration (hh:mm:ss)", "definition": "Portion of the recorded sleep window that the device could not classify into a specific sleep stage (deep/light/REM/awake), typically due to motion artifacts or the device being removed.", "units": "Hours:Minutes:Seconds", "calc": "Not applicable \u2014 passed through from Garmin.", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-5", "section": "New Section", "name": "Deep Sleep Duration", "instructions": "Masked time input, format hh:mm:ss.", "type": "Time Duration (hh:mm:ss)", "definition": "Total time spent in deep (slow-wave) sleep during the recorded period.", "units": "Hours:Minutes:Seconds", "calc": "Sum of all individual deep-sleep segment durations listed in the Sleep Levels grid.", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-6", "section": "New Section", "name": "Light Sleep Duration", "instructions": "Masked time input, format hh:mm:ss.", "type": "Time Duration (hh:mm:ss)", "definition": "Total time spent in light sleep during the recorded period.", "units": "Hours:Minutes:Seconds", "calc": "Sum of all individual light-sleep segment durations listed in the Sleep Levels grid.", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-7", "section": "New Section", "name": "REM Sleep Duration", "instructions": "Masked time input, format hh:mm:ss.", "type": "Time Duration (hh:mm:ss)", "definition": "Total time spent in REM (rapid eye movement) sleep during the recorded period.", "units": "Hours:Minutes:Seconds", "calc": "Sum of all individual REM segment durations listed in the Sleep Levels grid.", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-8", "section": "New Section", "name": "Awake Duration", "instructions": "Masked time input, format hh:mm:ss.", "type": "Time Duration (hh:mm:ss)", "definition": "Total time spent awake within the recorded sleep window (i.e., interruptions after sleep onset, not time before falling asleep).", "units": "Hours:Minutes:Seconds", "calc": "Sum of all individual awake segment durations listed in the Sleep Levels grid.", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-9", "section": "New Section", "name": "Sleep ms", "instructions": "Label present in the Form Builder with no visible input box in the screenshot provided.", "type": "Not confirmed \u2014 likely Numeric (Integer)", "definition": "Presumed to be total sleep duration expressed in milliseconds, mirroring the Duration field in a machine-readable numeric unit rather than hh:mm:ss text.", "units": "Milliseconds (presumed)", "calc": "Presumed: Duration converted to milliseconds. Not confirmed.", "internalVetting": "No input box appeared next to this label in the builder screenshot. This may be a calculated/system-only field, a field hidden by conditional logic, or a rendering artifact of the screenshot. Please verify directly in the AMS Form Builder.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "derived", "gridId": null, "gridColIndex": null}, {"id": "field-10", "section": "New Section", "name": "Sleep hrs", "instructions": "Label present in the Form Builder with no visible input box in the screenshot provided.", "type": "Not confirmed \u2014 likely Numeric (Decimal)", "definition": "Presumed to be total sleep duration expressed as a decimal number of hours (e.g., 7.5), mirroring the Duration field in a reporting-friendly numeric format.", "units": "Hours, decimal (presumed)", "calc": "Presumed: Duration converted to decimal hours. Not confirmed.", "internalVetting": "Same caveat as Sleep ms \u2014 no input box was visible in the builder screenshot. Verify directly in AMS.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "derived", "gridId": null, "gridColIndex": null}, {"id": "field-11", "section": "Sleep Levels (repeating grid)", "name": "Sleep Level", "instructions": "Grid column, one row per sleep-stage segment. '+ Add Row' button suggests rows can also be added/edited manually.", "type": "Text / Enumerated", "definition": "Identifies which sleep stage a given time segment belongs to.", "units": "N/A (categorical)", "calc": "N/A", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-sleep-levels", "gridColIndex": 0}, {"id": "field-12", "section": "Sleep Levels (repeating grid)", "name": "Start", "instructions": "Grid column, time value per row.", "type": "Time (format unconfirmed)", "definition": "Start time of the sleep-stage segment.", "units": "Time", "calc": "N/A", "internalVetting": "The sample PDF shows negative and irregular values for Start/End (e.g., -1:-2:00, 0:-13:00). This looks like a formatting/mapping issue \u2014 possibly a millisecond time-offset value being mis-rendered as hh:mm:ss rather than a genuine clock time \u2014 but I cannot confirm the root cause from the files provided. Recommend checking the raw Garmin API payload and the AMS field mapping/format mask before relying on this field for reporting.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-sleep-levels", "gridColIndex": 1}, {"id": "field-13", "section": "Sleep Levels (repeating grid)", "name": "End", "instructions": "Grid column, time value per row.", "type": "Time (format unconfirmed)", "definition": "End time of the sleep-stage segment.", "units": "Time", "calc": "N/A", "internalVetting": "Same formatting concern as the Start field above.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-sleep-levels", "gridColIndex": 2}, {"id": "field-14", "section": "Sleep Levels (repeating grid)", "name": "Sleep Level Duration", "instructions": "Grid column, time value per row.", "type": "Time Duration (hh:mm:ss)", "definition": "Length of the individual sleep-stage segment.", "units": "Hours:Minutes:Seconds", "calc": "End minus Start (presumed, given the Start/End formatting issue noted above, this may not be a simple subtraction in the underlying data).", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-sleep-levels", "gridColIndex": 3}, {"id": "field-15", "section": "Sleep SpO2 Samples (repeating grid)", "name": "Time of Reading", "instructions": "Grid column, one row per SpO2 sample. '+ Add Row' button present.", "type": "Time", "definition": "Timestamp at which a given blood-oxygen saturation (SpO2) sample was recorded.", "units": "Time", "calc": "N/A", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-spo2", "gridColIndex": 0}, {"id": "field-16", "section": "Sleep SpO2 Samples (repeating grid)", "name": "SpO2 Reading", "instructions": "Grid column, numeric value per row.", "type": "Numeric (Integer, Percentage)", "definition": "Blood-oxygen saturation percentage recorded by the device at the corresponding Time of Reading.", "units": "Percent (%)", "calc": "N/A", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-spo2", "gridColIndex": 1}, {"id": "field-17", "section": "Testing", "name": "Sleep Score", "instructions": "Single-line text/number box, standalone under a section literally labeled 'Testing'.", "type": "Not confirmed \u2014 Numeric or Text", "definition": "Purpose unclear. Appears separate from 'Overall Sleep Score' and 'Overall Sleep Score Value' in the Sleep Score section below, despite a very similar name.", "units": "Unknown", "calc": "Unknown", "internalVetting": "This field sits under a section literally named 'Testing,' which suggests it may be a placeholder, QA/test artifact, or a field still being validated by whoever built the form \u2014 rather than a field intended for production use. I did not fill in a guessed Definition/Purpose here because I don't have a verified basis for one. Recommend confirming directly with the form's builder/owner whether this field is still in use.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "derived", "gridId": null, "gridColIndex": null}, {"id": "field-18", "section": "Sleep Score", "name": "Overall Sleep Score", "instructions": "Single-line text box.", "type": "Text / Enumerated (Rating)", "definition": "Categorical, plain-language quality rating for the night's overall sleep, derived by Garmin's scoring algorithm from the numeric Overall Sleep Score Value.", "units": "N/A (categorical)", "calc": "Not certain \u2014 presumed to be a tiered mapping of Overall Sleep Score Value ranges to a label (e.g., GOOD corresponds to 89 in the sample). Exact thresholds are not confirmed.", "internalVetting": "Only the value GOOD is confirmed by the sample data. Other tiers likely exist (e.g., EXCELLENT, FAIR, POOR, based on the same labels seen in the Score Item table below) but this is inferred, not confirmed \u2014 verify the complete rating scale with Garmin's documentation or AMS's integration notes.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-19", "section": "Sleep Score", "name": "Overall Sleep Score Value", "instructions": "Single-line text/number box.", "type": "Numeric (Integer)", "definition": "Composite numeric sleep-quality score for the night, on what appears to be a 0\u2013100 scale.", "units": "Score points (presumed 0\u2013100 scale; range not explicitly confirmed)", "calc": "Not certain \u2014 presumed to be a weighted composite of the individual Score Item ratings below (totalDuration, stress, awakeCount, remPercentage, restlessness, lightPercentage, deepPercentage), consistent with Garmin's general sleep-scoring approach. Exact weighting formula is not confirmed.", "internalVetting": "", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": null, "gridColIndex": null}, {"id": "field-20", "section": "Sleep Score", "name": "Score Item", "instructions": "Grid column, one row per scoring sub-metric.", "type": "Text / Enumerated", "definition": "Name of the individual sleep sub-metric being scored.", "units": "N/A (categorical)", "calc": "N/A", "internalVetting": "The seven items listed are the ones observed in this single sample export. Treat this as the observed set, not necessarily an exhaustive list of every possible Score Item \u2014 additional sub-metrics may exist in other records.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-score-breakdown", "gridColIndex": 0}, {"id": "field-21", "section": "Sleep Score", "name": "Score", "instructions": "Grid column, one rating per row.", "type": "Text / Enumerated (Rating)", "definition": "Qualitative rating for the corresponding Score Item.", "units": "N/A (categorical)", "calc": "N/A", "internalVetting": "EXCELLENT, GOOD, and FAIR are all confirmed in the sample data. A fourth tier (e.g., POOR) is plausible by symmetry but not confirmed \u2014 verify the complete rating scale before building validation rules against it.", "changelog": "v1.0 \u2014 [date] \u2014 Initial documentation from Form Builder export.", "origin": "api", "gridId": "grid-score-breakdown", "gridColIndex": 1}], "grids": [{"id": "grid-sleep-levels", "label": "Sleep Levels", "section": "Sleep Levels (repeating grid)", "columnIds": ["field-11", "field-12", "field-13", "field-14"], "sample": ["deep", "1:11:00", "1:35:00", "0:24:00"], "sampleNote": "", "origin": "api"}, {"id": "grid-spo2", "label": "Sleep SpO2 Samples", "section": "Sleep SpO2 Samples (repeating grid)", "columnIds": ["field-15", "field-16"], "sample": ["6:14 AM", "97"], "sampleNote": "Illustrative only \u2014 the sample export's SpO2 grid had no rows to reference.", "origin": "api"}, {"id": "grid-score-breakdown", "label": "Sleep Score", "section": "Sleep Score", "columnIds": ["field-20", "field-21"], "sample": ["deepPercentage", "FAIR"], "sampleNote": "", "origin": "api"}], "sections": ["New Section", "Sleep Levels (repeating grid)", "Sleep SpO2 Samples (repeating grid)", "Testing", "Sleep Score"]}]}]};
-  const CSV_HEADERS = ["Sensor", "Form", "Section", "Table", "Field Name", "Field Origin (API/Derived)", "Field Instructions", "Field Type", "Units", "Definition / Purpose", "Calculation / Logic", "Internal Vetting", "Version / Change Log", "Sample Value (for table columns)"];
+  const CSV_HEADERS = ["Sensor", "Form", "Section", "Table", "Field Name", "Field Origin (API/Derived/Linked)", "Field Instructions", "Field Type", "Units", "Definition / Purpose", "Calculation / Logic", "Internal Vetting", "Version / Change Log", "Sample Value (for table columns)"];
   const DATA_FILE = 'data.json';
 
   // Change this to your team's passphrase. It lives in this file's own code
@@ -298,6 +308,9 @@
   let editMode = false;
   let view = { type: 'home' };
   const collapsedSensors = new Set();
+  // Section collapse/expand state, remembered for this browser tab's session
+  // (independent of the DOM so it survives a full page rebuild, e.g. toggling edit mode).
+  const sectionOpenMemory = {};
   let saveTimer = null;
   let focusFieldId = null;
 
@@ -582,7 +595,7 @@
         <h2>How this works for signed-in team members</h2>
         <ol>
           <li>Open any form from the sidebar — every field card is now editable. Click a name or value to change it, or use "+ Add field" / "+ Add section" / "+ Add table" to build one out by hand.</li>
-          <li>Click a blue "API" or gold "Derived" badge on a field to switch which one it is.</li>
+          <li>Click a field's colored origin badge (blue API, gold Derived, or burgundy Linked) to cycle between the three.</li>
           <li>For a new form with many fields at once, download the CSV template below, fill it in, and upload it — much faster than adding fields one at a time.</li>
           <li>Nothing you do is visible to anyone else until you publish it — see "Publish your changes" below for the exact steps.</li>
         </ol>
@@ -676,7 +689,8 @@
       ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Recovery Score', 'API', 'Single-line number box', 'Numeric (0-100)', '%', 'Overall recovery score for the day', 'N/A', '', 'v1.0 - [date] - Initial documentation.', ''],
       ['Whoop', 'Whoop Recovery Summary', 'HRV Samples', 'HRV Reading', 'Time of Reading', 'API', 'Grid column, one row per sample', 'Time', 'Time', 'Timestamp of the HRV sample', 'N/A', '', 'v1.0 - [date] - Initial documentation.', '6:14 AM'],
       ['Whoop', 'Whoop Recovery Summary', 'HRV Samples', 'HRV Reading', 'HRV (ms)', 'API', 'Grid column, numeric value per row', 'Numeric', 'ms', 'Heart rate variability reading in milliseconds', 'N/A', '', 'v1.0 - [date] - Initial documentation.', '62'],
-      ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Recovery Trend (7-day)', 'Derived', 'Calculated, no direct input', 'Numeric', 'points', '7-day rolling average of Recovery Score, added by USOPC for trend reporting', 'Average of the last 7 daily Recovery Score values', 'Not part of the Whoop API - verify the averaging window with whoever built this.', 'v1.0 - [date] - Initial documentation.', ''],
+      ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Recovery Trend (7-day)', 'Derived', 'Calculated, no direct input', 'Numeric', 'points', '7-day rolling average of Recovery Score, added for trend reporting', 'Average of the last 7 daily Recovery Score values', 'Verify the averaging window with whoever built this.', 'v1.0 - [date] - Initial documentation.', ''],
+      ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Athlete Sport', 'Linked', 'Not entered on this form - pulled in from the athlete profile.', 'Text', 'N/A', 'Linked profile information showing the athlete\'s primary sport.', 'N/A', '', 'v1.0 - [date] - Initial documentation.', ''],
     ];
     const csv = unparseCsv(rows);
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -688,7 +702,10 @@
   }
 
   function parseOrigin(value) {
-    return /^d/i.test((value || '').trim()) ? 'derived' : 'api';
+    const v = (value || '').trim();
+    if (/^d/i.test(v)) return 'derived';
+    if (/^l/i.test(v)) return 'linked';
+    return 'api';
   }
 
   function groupCsvRowsIntoForm(rows) {
@@ -702,7 +719,7 @@
 
       const tableName = (row['Table'] || '').trim();
       const id = newId('field');
-      const origin = parseOrigin(row['Field Origin (API/Derived)']);
+      const origin = parseOrigin(row['Field Origin (API/Derived/Linked)']);
       const field = {
         id,
         section: sectionName,
@@ -869,7 +886,8 @@
       </div>
       <div class="legend">
         <span class="legend-item"><span class="legend-swatch" style="background: var(--api-blue);"></span>API-offered field</span>
-        <span class="legend-item"><span class="legend-swatch" style="background: var(--derived-gold);"></span>USOPC-derived field / added calculation</span>
+        <span class="legend-item"><span class="legend-swatch" style="background: var(--derived-gold);"></span>Derived field / added calculation</span>
+        <span class="legend-item"><span class="legend-swatch" style="background: var(--linked-burgundy);"></span>Linked field - linked profile or event information</span>
       </div>
       ${teamMode ? `
       <div class="team-toolbar-row">
@@ -877,7 +895,7 @@
         <button class="action" id="exportFormCsv" title="Download this form's fields as CSV, e.g. for bulk editing in Excel">Export as CSV</button>
         <button class="action action-danger" id="resetFormEdits" title="Discard local edits and restore this form to its last-imported state">Reset this form</button>
       </div>
-      <p class="edit-hint" id="editHint" ${editMode ? '' : 'hidden'}>Editing on — click any field name or value to change it, or use "+ Add field" / "+ Add section" / "+ Add table" below. Click a field's API/Derived badge to switch it.</p>
+      <p class="edit-hint" id="editHint" ${editMode ? '' : 'hidden'}>Editing on — click any field name or value to change it, or use "+ Add field" / "+ Add section" / "+ Add table" below. Click a field's origin badge to cycle API / Derived / Linked.</p>
       ` : ''}
       <div id="fieldsArea"></div>
       <footer class="notes">
@@ -944,12 +962,26 @@
 
         if (visibleItems.length === 0 && !(teamMode && editMode && !query && !sectionVal)) return;
 
-        const block = document.createElement('div');
+        const AUTO_COLLAPSED_SECTIONS = ['User Account Details', 'Day of the Week', 'Profile'];
+        const filtersActive = !!(query || sectionVal);
+        const memKey = form.id + '::' + sectionName;
+        const wasToggled = Object.prototype.hasOwnProperty.call(sectionOpenMemory, memKey);
+        const sectionOpen = filtersActive
+          ? true
+          : (wasToggled ? sectionOpenMemory[memKey] : !AUTO_COLLAPSED_SECTIONS.includes(sectionName));
+
+        const block = document.createElement('details');
         block.className = 'section-block';
-        const headRow = document.createElement('div');
+        block.dataset.openKey = sectionName;
+        if (sectionOpen) block.open = true;
+        block.addEventListener('toggle', () => {
+          if (filtersActive) return; // don't memorize a state that was forced open by search/section-filter
+          sectionOpenMemory[memKey] = block.open;
+        });
+        const headRow = document.createElement('summary');
         headRow.className = 'section-heading-row';
         headRow.innerHTML = `
-          <span class="section-heading">${escapeHtml(sectionName)}</span>
+          <span class="summary-left"><span class="chevron section-chevron"></span><span class="section-heading">${escapeHtml(sectionName)}</span></span>
           ${(teamMode && editMode) ? `<button class="section-remove" data-remove-section="${escapeHtml(sectionName)}">Remove section</button>` : ''}
         `;
         block.appendChild(headRow);
@@ -1030,7 +1062,8 @@
       const attrs = editable === 'true'
         ? `data-toggle-origin="${id}" data-is-grid="${isGrid ? '1' : '0'}" type="button"`
         : '';
-      return `<${tag} class="origin-badge" data-origin="${origin}" ${attrs}>${origin === 'derived' ? 'Derived' : 'API'}</${tag}>`;
+      const label = origin === 'derived' ? 'Derived' : (origin === 'linked' ? 'Linked' : 'API');
+      return `<${tag} class="origin-badge" data-origin="${origin}" ${attrs}>${label}</${tag}>`;
     }
     function buildFieldCard(field, editable, openState) {
       const details = document.createElement('details');
@@ -1102,7 +1135,7 @@
       fieldsArea.querySelectorAll('details').forEach(d => d.open = true);
     });
     document.getElementById('collapseAll').addEventListener('click', () => {
-      fieldsArea.querySelectorAll('details.field').forEach(d => d.open = false);
+      fieldsArea.querySelectorAll('details.field, details.section-block').forEach(d => d.open = false);
     });
 
     if (teamMode) {
@@ -1134,12 +1167,13 @@
       if (originBtn) {
         e.preventDefault();
         const id = originBtn.dataset.toggleOrigin;
+        const nextOrigin = (o) => (o === 'api' ? 'derived' : (o === 'derived' ? 'linked' : 'api'));
         if (originBtn.dataset.isGrid === '1') {
           const grid = form.grids.find(g => g.id === id);
-          if (grid) grid.origin = grid.origin === 'derived' ? 'api' : 'derived';
+          if (grid) grid.origin = nextOrigin(grid.origin);
         } else {
           const f = fieldById(id);
-          if (f) f.origin = f.origin === 'derived' ? 'api' : 'derived';
+          if (f) f.origin = nextOrigin(f.origin);
         }
         persist(); renderFields();
         return;
@@ -1199,6 +1233,7 @@
       }
       const removeSectionBtn = e.target.closest('[data-remove-section]');
       if (removeSectionBtn) {
+        e.preventDefault();
         const name = removeSectionBtn.dataset.removeSection;
         if (confirm(`Delete the section "${name}" and everything in it? This can't be undone.`)) {
           const gridIdsInSection = new Set(form.fields.filter(f => f.section === name && f.gridId).map(f => f.gridId));
@@ -1265,7 +1300,8 @@
         origin = grid.origin;
       }
       rows.push([
-        sensor.name, form.name, f.section, table, f.name, origin === 'derived' ? 'Derived' : 'API',
+        sensor.name, form.name, f.section, table, f.name,
+        origin === 'derived' ? 'Derived' : (origin === 'linked' ? 'Linked' : 'API'),
         f.instructions, f.type, f.units, f.definition, f.calc, f.internalVetting, f.changelog, sample,
       ]);
     });
