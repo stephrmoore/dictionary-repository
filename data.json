@@ -2877,16 +2877,17 @@
               "id": "field-mu76rbzb-hvexc",
               "section": "Sleep",
               "name": "Sleep Score",
-              "instructions": "Single-line text/number box.",
+              "instructions": "",
               "type": "Numeric",
-              "units": "0-100 (presumed)",
-              "definition": "Oura's overall sleep quality score for this period. Sample value observed: \"93\".",
+              "units": "0-100",
+              "definition": "Oura's reported propreitary calculation for overall sleep quality score for this period. ",
               "calc": "N/A",
-              "internalVetting": "",
-              "changelog": "v1.0 - [date] - Initial documentation from Form Builder screenshots and sample export.",
+              "internalVetting": "Key contributors to score:\n• Total Sleep: Getting 7 to 9 hours of sleep.• Efficiency: Spending at least 85% of your time in bed actually asleep.• Restfulness: Tracking movement and unexpected wake-ups.• REM Sleep: Getting about 1.5 to 2 hours of rapid eye movement sleep.• Deep Sleep: Getting 1 to 1.5 hours of slow-wave sleep for physical recovery.• Latency: Falling asleep within 15 to 20 minutes.• Timing: Aligning your midpoint of sleep between midnight and 3:00 AM.\n\nOura Sleep Score Interpretations:\n85-100: Optimal\n70-84: Good\n60-69: Fair\n0-59: Pay Attention\n\nhttps://support.ouraring.com/hc/en-us/articles/360057792293-Sleep-Contributors\n",
+              "changelog": "V2 - 2024",
               "origin": "api",
               "gridId": null,
-              "gridColIndex": null
+              "gridColIndex": null,
+              "sampleValue": "93"
             },
             {
               "id": "field-mu76rbzb-wua8a",
