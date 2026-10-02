@@ -1261,7 +1261,7 @@
     fieldsArea.addEventListener('input', (e) => {
       const target = e.target;
       if (!(teamMode && editMode) || target.getAttribute('contenteditable') !== 'true') return;
-      const text = target.textContent;
+      const text = target.innerText;
       if (target.dataset.role === 'gridSample') {
         const grid = form.grids.find(g => g.id === target.dataset.gridId);
         if (grid) grid.sample[Number(target.dataset.colIndex)] = text;
