@@ -6,10 +6,10 @@
 <title>Athlete 360 Integrations Data Dictionaries</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #EFEAE6;
+    --bg: #F7F5F2;
     --panel: #FFFFFF;
     --ink: #00263A;
     --ink-soft: #51677E;
@@ -25,7 +25,9 @@
     --danger: #D31118;
     --line: #DED7CE;
     --line-soft: #EEE9E2;
-    --radius: 3px;
+    --radius: 7px;
+    --label-navy: #000F4D;
+    --card-line: #E3E6EB;
     --sidebar-w: 270px;
   }
   * { box-sizing: border-box; }
@@ -35,7 +37,7 @@
     font-family: 'Public Sans', -apple-system, sans-serif; line-height: 1.5;
     display: flex; flex-direction: column; height: 100vh; overflow: hidden;
   }
-  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  .mono { font-family: inherit; font-variant-numeric: tabular-nums; }
 
   header.top {
     background: var(--panel); border-bottom: 1px solid var(--line);
@@ -65,7 +67,8 @@
     border-bottom: 1px solid var(--line);
   }
   .home-link:hover { background: #F5F6F8; }
-  .home-link.active { background: #E7ECF3; box-shadow: inset 3px 0 0 var(--burgundy); }
+  .home-link.active, .form-item.active { position: relative; background: #E7ECF3; border-radius: 0 var(--radius) var(--radius) 0; }
+  .home-link.active::before, .form-item.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2.5px; background: var(--burgundy); }
 
   .sensor-group { margin-bottom: 4px; margin-top: 8px; }
   .sensor-head {
@@ -89,11 +92,11 @@
   .sensor-group.collapsed .form-list { display: none; }
   .form-item {
     display: flex; align-items: center; justify-content: space-between; gap: 6px;
-    padding: 7px 8px; border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--ink-soft);
+    padding: 7px 8px; border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--ink-soft); align-items: flex-start;
   }
   .form-item:hover { background: #F5F6F8; color: var(--ink); }
   .form-item.active { background: #E7ECF3; color: var(--navy); font-weight: 600; }
-  .form-item-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .form-item-name { white-space: normal; overflow-wrap: anywhere; line-height: 1.35; min-width: 0; }
 
   .add-inline {
     font-family: 'Public Sans', sans-serif; font-size: 12.5px; padding: 6px 8px;
@@ -126,6 +129,8 @@
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); }
   .status-pill.on .status-dot { background: var(--teal); }
 
+  .banner-amber { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #FFF3D1; border: 1px solid #EBC453; color: #5E4400; border-radius: var(--radius); padding: 11px 14px; margin-bottom: 14px; font-size: 13px; }
+  .banner-amber strong { color: #4A3600; }
   button.action {
     font-family: 'Public Sans', sans-serif; font-size: 13px; padding: 8px 12px;
     border: 1px solid var(--line); background: var(--panel); color: var(--ink-soft);
@@ -178,12 +183,16 @@
   .section-heading-row:hover .section-heading { color: var(--teal); }
   .section-chevron { margin-right: 8px; }
   .section-heading { font-size: 12.5px; font-weight: 600; color: var(--navy); text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-actions { display: flex; gap: 14px; }
+  .section-rename { font-size: 11.5px; color: var(--navy); background: none; border: none; cursor: pointer; opacity: 0.8; }
+  .section-rename:hover { opacity: 1; text-decoration: underline; }
   .section-remove { font-size: 11.5px; color: var(--danger); background: none; border: none; cursor: pointer; opacity: 0.7; }
   .section-remove:hover { opacity: 1; text-decoration: underline; }
   .add-field-row { margin-top: 8px; }
   .page-add-section { margin-top: 30px; }
 
-  details.field { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--api-blue); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
+  details.field { position: relative; background: var(--panel); border: 1px solid var(--card-line); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  details.field { border-left: 2.5px solid var(--api-blue); }
   details.field[data-origin="derived"] { border-left-color: var(--derived-gold); }
   details.field[data-origin="linked"] { border-left-color: var(--linked-burgundy); }
   summary.field-summary { list-style: none; cursor: pointer; padding: 13px 16px; display: flex; align-items: center; gap: 12px; justify-content: space-between; }
@@ -209,17 +218,18 @@
   .field-body { padding: 4px 16px 16px; border-top: 1px solid var(--line-soft); }
   .spec-row { display: grid; grid-template-columns: 160px 1fr; gap: 4px 16px; padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
   .spec-row:last-of-type { border-bottom: none; }
-  .spec-label { font-size: 11.5px; color: var(--teal); padding-top: 1px; }
+  .spec-label { font-size: 11.5px; color: var(--label-navy); padding-top: 1px; }
   .spec-value { font-size: 13.5px; color: var(--ink); }
   .spec-value:empty::before { content: '—'; color: #A8B3BC; }
-  .spec-value.vetting { white-space: pre-wrap; min-height: 44px; line-height: 1.5; }
+  .spec-value.vetting { white-space: pre-wrap; }
+  table.grid-preview td:empty::before { content: '—'; color: #A8B3BC; }
   .empty-state { text-align: center; padding: 60px 20px; color: var(--ink-soft); font-size: 14px; }
 
   .grid-col-count { font-size: 11.5px; color: var(--ink-soft); white-space: nowrap; }
   .grid-preview-wrap { overflow-x: auto; margin: 6px 0 18px; border: 1px solid var(--line-soft); border-radius: var(--radius); }
   table.grid-preview { border-collapse: collapse; width: 100%; min-width: 420px; }
   table.grid-preview th, table.grid-preview td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
-  table.grid-preview th { background: #F5F8F8; font-size: 12.5px; font-weight: 600; color: var(--teal); border-bottom: 1px solid var(--line); }
+  table.grid-preview th { background: #F5F8F8; font-size: 12.5px; font-weight: 600; color: var(--label-navy); border-bottom: 1px solid var(--line); }
   table.grid-preview td { font-size: 13.5px; color: var(--ink-soft); }
   table.grid-preview tbody tr:last-child td { border-bottom: none; }
   .grid-sample-note { font-size: 11.5px; color: var(--ink-soft); font-style: italic; margin: -10px 0 18px; }
@@ -302,7 +312,24 @@
     return JSON.parse(JSON.stringify(SEED_APP));
   }
 
-  let APP = await loadApp();
+  // Placeholder text meaning "nothing here" (N/A, NA, -, not applicable...) is
+  // stored as an empty value, which the cards display as a uniform em dash.
+  const EMPTY_PLACEHOLDER_RE = /^\s*(n\/?a|n\.a\.?|n\\a|not applicable|[-\u2013\u2014]+)\s*$/i;
+  const NORMALIZED_KEYS = ['instructions', 'type', 'units', 'sampleValue', 'scaleRange', 'definition', 'calc', 'internalVetting', 'changelog'];
+  function cleanValue(v) {
+    if (v == null) return '';
+    const str = String(v);
+    return (str.trim() === '' || EMPTY_PLACEHOLDER_RE.test(str)) ? '' : str;
+  }
+  function normalizeApp(app) {
+    (app.sensors || []).forEach(sn => (sn.forms || []).forEach(fm => {
+      (fm.fields || []).forEach(f => NORMALIZED_KEYS.forEach(k => { if (k in f || k === 'sampleValue' || k === 'scaleRange') f[k] = cleanValue(f[k]); }));
+      (fm.grids || []).forEach(g => { g.sample = (g.sample || []).map(cleanValue); });
+    }));
+    return app;
+  }
+
+  let APP = normalizeApp(await loadApp());
   let teamMode = false;
   try { teamMode = sessionStorage.getItem(SESSION_KEY) === '1'; } catch (e) { /* ignore */ }
   let editMode = false;
@@ -555,7 +582,7 @@
     } else {
       const found = findForm(view.formId);
       if (found) {
-        topCrumbEl.innerHTML = `<a data-go-home="1">Directions</a> / ${escapeHtml(found.sensor.name)} / <strong>${escapeHtml(found.form.name)}</strong>`;
+        topCrumbEl.innerHTML = `<a data-go-home="1">Home</a> / ${escapeHtml(found.sensor.name)} / <strong>${escapeHtml(found.form.name)}</strong>`;
       } else {
         topCrumbEl.innerHTML = `<strong>Athlete 360 Integrations Data Dictionaries</strong>`;
       }
@@ -579,7 +606,8 @@
         <p class="lead">This is a central reference for Athlete 360 Integration Event Form fields, built to help builders and users quickly understand how data is captured, defined, and applied across integration workflows.</p>
       </div>
 
-      <div class="status-pill ${teamMode ? 'on' : ''}"><span class="status-dot"></span>${statusLine()}</div>
+      ${loadedFrom === 'local' ? `<div class="banner-amber" role="status"><span><strong>Unpublished local edits.</strong> This browser is showing edits that have not been published yet.${teamMode ? '' : ' Team members can sign in below to publish or discard them.'}</span>${teamMode ? `<button class="action" id="btnDiscardLocal" title="Clear this browser's unpublished edits and reload the published/sample version">Discard local edits &amp; reload</button>` : ''}</div>` : ''}
+      ${teamMode ? `<div class="status-pill on"><span class="status-dot"></span>${statusLine()}</div>` : ''}
 
       <div class="panel">
         <h2>How this works</h2>
@@ -611,7 +639,6 @@
           ${teamMode
             ? `<button class="action action-team" id="btnSignOut">Sign out</button>`
             : `<button class="action action-team" id="btnSignIn">Team sign-in</button>`}
-          ${loadedFrom === 'local' ? `<button class="action" id="btnDiscardLocal" title="Clear this browser's unpublished edits and reload the published/sample version">Discard local edits &amp; reload</button>` : ''}
         </div>
       </div>
     `;
@@ -686,11 +713,11 @@
   function downloadCsvTemplate() {
     const rows = [
       CSV_HEADERS,
-      ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Recovery Score', 'API', 'Single-line number box', 'Numeric (0-100)', '%', '82', '0-100', 'Overall recovery score for the day', 'N/A', '', 'v1.0 - [date] - Initial documentation.'],
-      ['Whoop', 'Whoop Recovery Summary', 'HRV Samples', 'HRV Reading', 'Time of Reading', 'API', 'Grid column, one row per sample', 'Time', 'Time', '6:14 AM', 'N/A', 'Timestamp of the HRV sample', 'N/A', '', 'v1.0 - [date] - Initial documentation.'],
-      ['Whoop', 'Whoop Recovery Summary', 'HRV Samples', 'HRV Reading', 'HRV (ms)', 'API', 'Grid column, numeric value per row', 'Numeric', 'ms', '62', '0-200 (typical)', 'Heart rate variability reading in milliseconds', 'N/A', '', 'v1.0 - [date] - Initial documentation.'],
+      ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Recovery Score', 'API', 'Single-line number box', 'Numeric (0-100)', '%', '82', '0-100', 'Overall recovery score for the day', '', '', 'v1.0 - [date] - Initial documentation.'],
+      ['Whoop', 'Whoop Recovery Summary', 'HRV Samples', 'HRV Reading', 'Time of Reading', 'API', 'Grid column, one row per sample', 'Time', 'Time', '6:14 AM', '', 'Timestamp of the HRV sample', '', '', 'v1.0 - [date] - Initial documentation.'],
+      ['Whoop', 'Whoop Recovery Summary', 'HRV Samples', 'HRV Reading', 'HRV (ms)', 'API', 'Grid column, numeric value per row', 'Numeric', 'ms', '62', '0-200 (typical)', 'Heart rate variability reading in milliseconds', '', '', 'v1.0 - [date] - Initial documentation.'],
       ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Recovery Trend (7-day)', 'Derived', 'Calculated, no direct input', 'Numeric', 'points', '79', '0-100', '7-day rolling average of Recovery Score, added for trend reporting', 'Average of the last 7 daily Recovery Score values', 'Verify the averaging window with whoever built this.', 'v1.0 - [date] - Initial documentation.'],
-      ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Athlete Sport', 'Linked', 'Not entered on this form - pulled in from the athlete profile.', 'Text', 'N/A', 'Track & Field', 'N/A (categorical)', 'Linked profile information showing the athlete\'s primary sport.', 'N/A', '', 'v1.0 - [date] - Initial documentation.'],
+      ['Whoop', 'Whoop Recovery Summary', 'New Section', '', 'Athlete Sport', 'Linked', 'Not entered on this form - pulled in from the athlete profile.', 'Text', '', 'Track & Field', 'Free text (categorical)', 'Linked profile information showing the athlete\'s primary sport.', '', '', 'v1.0 - [date] - Initial documentation.'],
     ];
     const csv = unparseCsv(rows);
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -724,15 +751,15 @@
         id,
         section: sectionName,
         name: (row['Field Name'] || 'Untitled field').trim(),
-        instructions: row['Field Instructions'] || '',
-        type: row['Field Type'] || '',
-        units: row['Units'] || '',
-        sampleValue: row['Sample Value'] || '',
-        scaleRange: row['Scale / Range'] || '',
-        definition: row['Definition / Purpose'] || '',
-        calc: row['Calculation / Logic'] || '',
-        internalVetting: row['Internal Vetting'] || '',
-        changelog: row['Version / Change Log'] || '',
+        instructions: cleanValue(row['Field Instructions']),
+        type: cleanValue(row['Field Type']),
+        units: cleanValue(row['Units']),
+        sampleValue: cleanValue(row['Sample Value']),
+        scaleRange: cleanValue(row['Scale / Range']),
+        definition: cleanValue(row['Definition / Purpose']),
+        calc: cleanValue(row['Calculation / Logic']),
+        internalVetting: cleanValue(row['Internal Vetting']),
+        changelog: cleanValue(row['Version / Change Log']),
         origin,
         gridId: null,
         gridColIndex: null,
@@ -750,7 +777,7 @@
         field.gridId = grid.id;
         field.gridColIndex = grid.columnIds.length;
         grid.columnIds.push(id);
-        grid.sample.push(row['Sample Value'] || '');
+        grid.sample.push(cleanValue(row['Sample Value']));
       }
 
       fields.push(field);
@@ -844,7 +871,7 @@
         const parsed = JSON.parse(reader.result);
         if (!parsed || !Array.isArray(parsed.sensors)) throw new Error('This file is not a data-dictionary export.');
         if (confirm('Replace everything in this app with the imported file? This overwrites all sensors and forms currently shown.')) {
-          APP = parsed;
+          APP = normalizeApp(parsed);
           view = { type: 'home' };
           persist();
           renderAll();
@@ -889,7 +916,7 @@
       <div class="legend">
         <span class="legend-item"><span class="legend-swatch" style="background: var(--api-blue);"></span>API-offered field</span>
         <span class="legend-item"><span class="legend-swatch" style="background: var(--derived-gold);"></span>Derived field / added calculation</span>
-        <span class="legend-item"><span class="legend-swatch" style="background: var(--linked-burgundy);"></span>Linked field - linked profile or event information</span>
+        <span class="legend-item"><span class="legend-swatch" style="background: var(--linked-burgundy);"></span>Linked from profile/event</span>
       </div>
       ${teamMode ? `
       <div class="team-toolbar-row">
@@ -984,7 +1011,7 @@
         headRow.className = 'section-heading-row';
         headRow.innerHTML = `
           <span class="summary-left"><span class="chevron section-chevron"></span><span class="section-heading">${escapeHtml(sectionName)}</span></span>
-          ${(teamMode && editMode) ? `<button class="section-remove" data-remove-section="${escapeHtml(sectionName)}">Remove section</button>` : ''}
+          ${(teamMode && editMode) ? `<span class="section-actions"><button class="section-rename" data-rename-section="${escapeHtml(sectionName)}">Rename section</button><button class="section-remove" data-remove-section="${escapeHtml(sectionName)}">Remove section</button></span>` : ''}
         `;
         block.appendChild(headRow);
 
@@ -1043,10 +1070,10 @@
     function fieldSpecRows(field, editable) {
       return `
         ${specRow('Field instructions', field.instructions, 'instructions', field.id, editable)}
-        ${specRow('Field type', field.type, 'type', field.id, editable, true)}
-        ${specRow('Units', field.units, 'units', field.id, editable, true)}
-        ${specRow('Sample Value', field.sampleValue, 'sampleValue', field.id, editable, true)}
-        ${specRow('Scale / range', field.scaleRange, 'scaleRange', field.id, editable, true)}
+        ${specRow('Field type', field.type, 'type', field.id, editable)}
+        ${specRow('Units', field.units, 'units', field.id, editable)}
+        ${specRow('Sample Value', field.sampleValue, 'sampleValue', field.id, editable)}
+        ${specRow('Scale / range', field.scaleRange, 'scaleRange', field.id, editable)}
         ${specRow('Definition / purpose', field.definition, 'definition', field.id, editable)}
         ${specRow('Calculation / logic', field.calc, 'calc', field.id, editable)}
         ${specRow('Internal vetting', field.internalVetting, 'internalVetting', field.id, editable, false, true)}
@@ -1082,7 +1109,7 @@
             <span class="field-name" data-role="name" data-id="${field.id}" contenteditable="${editable}">${escapeHtml(field.name)}</span>
           </div>
           <div class="summary-right">
-            <span class="field-type-tag mono">${escapeHtml(field.type)}</span>
+            <span class="field-type-tag">${escapeHtml(field.type)}</span>
             ${originBadge(field.origin, field.id, false, editable)}
             ${editable === 'true' ? `<button class="field-remove" data-remove-field="${field.id}" title="Delete this field">×</button>` : ''}
           </div>
@@ -1105,7 +1132,7 @@
           <summary class="subfield-summary">
             <div class="summary-left"><span class="chevron"></span><span class="field-name">${escapeHtml(c.name)}</span></div>
             <div class="summary-right">
-              <span class="field-type-tag mono">${escapeHtml(c.type)}</span>
+              <span class="field-type-tag">${escapeHtml(c.type)}</span>
             </div>
           </summary>
           <div class="subfield-body">${fieldSpecRows(c, editable)}</div>
@@ -1235,6 +1262,26 @@
         persist(); renderFields();
         return;
       }
+      const renameSectionBtn = e.target.closest('[data-rename-section]');
+      if (renameSectionBtn) {
+        e.preventDefault();
+        const oldName = renameSectionBtn.dataset.renameSection;
+        const entered = prompt('Rename this section:', oldName);
+        if (entered === null) return;
+        const newName = entered.trim();
+        if (!newName || newName === oldName) return;
+        if (form.sections.includes(newName)) { alert('A section with that name already exists.'); return; }
+        form.sections = form.sections.map(sec => sec === oldName ? newName : sec);
+        form.fields.forEach(f => { if (f.section === oldName) f.section = newName; });
+        form.grids.forEach(g => { if (g.section === oldName) g.section = newName; });
+        const oldKey = form.id + '::' + oldName;
+        if (Object.prototype.hasOwnProperty.call(sectionOpenMemory, oldKey)) {
+          sectionOpenMemory[form.id + '::' + newName] = sectionOpenMemory[oldKey];
+          delete sectionOpenMemory[oldKey];
+        }
+        persist(); rerenderForm();
+        return;
+      }
       const removeSectionBtn = e.target.closest('[data-remove-section]');
       if (removeSectionBtn) {
         e.preventDefault();
@@ -1263,7 +1310,8 @@
     fieldsArea.addEventListener('input', (e) => {
       const target = e.target;
       if (!(teamMode && editMode) || target.getAttribute('contenteditable') !== 'true') return;
-      const text = target.innerText;
+      let text = target.innerText;
+      if (target.dataset.role !== 'name' && text.trim() === '') text = '';
       if (target.dataset.role === 'gridSample') {
         const grid = form.grids.find(g => g.id === target.dataset.gridId);
         if (grid) grid.sample[Number(target.dataset.colIndex)] = text;
@@ -1274,6 +1322,25 @@
       if (!field) return;
       if (target.dataset.role === 'name') field.name = text;
       else if (target.dataset.role === 'spec') field[target.dataset.key] = text;
+      persist();
+    });
+
+    // When leaving a field, turn N/A-style placeholders (or leftover blank
+    // lines) into a truly empty value so it shows the uniform em dash.
+    fieldsArea.addEventListener('focusout', (e) => {
+      const target = e.target;
+      if (!(teamMode && editMode) || target.getAttribute('contenteditable') !== 'true') return;
+      const role = target.dataset.role;
+      if (role !== 'spec' && role !== 'gridSample') return;
+      if (cleanValue(target.innerText) !== '') return;
+      target.innerHTML = '';
+      if (role === 'gridSample') {
+        const grid = form.grids.find(g => g.id === target.dataset.gridId);
+        if (grid) grid.sample[Number(target.dataset.colIndex)] = '';
+      } else {
+        const field = fieldById(target.dataset.id);
+        if (field) field[target.dataset.key] = '';
+      }
       persist();
     });
 
